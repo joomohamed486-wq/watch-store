@@ -52,7 +52,7 @@ export default async function OrdersPage() {
                     <p className="text-sm text-muted-foreground">{order.items.length} منتج</p>
                   </div>
                   <div className="text-left">
-                    <p className="font-bold text-lg">{formatPrice(order.total)}</p>
+                    <p className="font-bold text-lg">{formatPrice(Number(order.total))}</p>
                     <Link href={`/orders/${order.id}`} className="text-sm text-primary hover:underline">تفاصيل الطلب</Link>
                   </div>
                 </div>
