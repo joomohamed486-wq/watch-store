@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
           productImage: null,
           quantity: item.quantity,
           unitPrice: item.product.price,
-          totalPrice: item.product.price * item.quantity,
+          totalPrice: Number(item.product.price) * item.quantity,
         })),
       },
     },
