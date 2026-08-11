@@ -34,7 +34,6 @@ export default async function AdminProductsPage() {
                   <TableCell className="font-medium">{product.nameAr}</TableCell>
                   <TableCell>{product.brand.name}</TableCell>
                   <TableCell>{product.category.nameAr}</TableCell>
-                 
                   <TableCell>{formatPrice(Number(product.total))}</TableCell>
                   <TableCell>{product.stockQuantity}</TableCell>
                   <TableCell><Badge variant={product.status === "ACTIVE" ? "default" : "secondary"}>{product.status}</Badge></TableCell>
