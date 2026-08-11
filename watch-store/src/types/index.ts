@@ -1,0 +1,13 @@
+export type UserRole = "SUPER_ADMIN" | "ADMIN" | "STAFF" | "INVENTORY_MANAGER" | "CUSTOMER";
+export type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
+export type OrderStatus = "PENDING" | "CONFIRMED" | "PROCESSING" | "PACKED" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "RETURNED" | "REFUNDED";
+export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "PARTIALLY_REFUNDED";
+export type PaymentMethod = "CASH_ON_DELIVERY" | "STRIPE" | "PAYMOB" | "PAYTABS";
+export type ProductStatus = "DRAFT" | "ACTIVE" | "INACTIVE" | "ARCHIVED";
+export type Status = "ACTIVE" | "INACTIVE";
+export type ReviewStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type InventoryType = "STOCK_IN" | "STOCK_OUT" | "ADJUSTMENT" | "SALE" | "RETURN" | "RESERVATION" | "RELEASE";
+export type CouponType = "PERCENTAGE" | "FIXED_AMOUNT" | "FREE_SHIPPING";
+export type MovementType = "QUARTZ" | "AUTOMATIC" | "MECHANICAL" | "SMART";
+export type Gender = "MEN" | "WOMEN" | "UNISEX";
+export type NotificationType = "ORDER" | "INVENTORY" | "CUSTOMER" | "REVIEW" | "SYSTEM" | "PAYMENT" | "SHIPPING";
