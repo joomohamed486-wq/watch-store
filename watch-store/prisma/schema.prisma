@@ -305,9 +305,11 @@ model InventoryTransaction {
 
   product     Product  @relation(fields: [productId], references: [id])
   user        User?    @relation(fields: [userId], references: [id])
+  order       Order?   @relation(fields: [orderId], references: [id])
 
   @@index([productId])
   @@index([userId])
+  @@index([orderId])
   @@index([createdAt])
   @@map("inventory_transactions")
 }
