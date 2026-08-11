@@ -482,7 +482,7 @@ async function main() {
         productImage: null,
         quantity: qty,
         unitPrice: product.price,
-        totalPrice: product.price * qty,
+        totalPrice: Number(product.price) * qty,
       };
     });
 
