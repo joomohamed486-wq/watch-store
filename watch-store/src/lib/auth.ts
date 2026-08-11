@@ -84,8 +84,8 @@ export function isAdmin(role: UserRole): boolean {
   return [UserRole.SUPER_ADMIN, UserRole.ADMIN].includes(role);
 }
 
-export function isStaff(role: UserRole): boolean {
-  return [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.STAFF, UserRole.INVENTORY_MANAGER].includes(role);
+export function isAdmin(role: UserRole): boolean {
+  return role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN;
 }
 
 export function checkPermission(role: UserRole, allowedRoles: UserRole[]): boolean {
