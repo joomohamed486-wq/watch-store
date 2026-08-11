@@ -1,11 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { prisma } from "./prisma";
+import { db } from "./db";
 import bcrypt from "bcryptjs";
-import { UserRole } from "@prisma/client";
-
-const secretKey = process.env.AUTH_SECRET;
-const key = new TextEncoder().encode(secretKey);
+import { UserRole } from "@/types"; // أنشئ هذا الملف أو استبدله
 
 export interface SessionUser {
   id: string;
@@ -13,6 +10,9 @@ export interface SessionUser {
   name: string | null;
   role: UserRole;
 }
+
+const secretKey = process.env.AUTH_SECRET;
+const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: unknown) {
   return await new SignJWT(payload as Record<string, unknown>)
@@ -24,9 +24,7 @@ export async function encrypt(payload: unknown) {
 
 export async function decrypt(token: string) {
   try {
-    const { payload } = await jwtVerify(token, key, {
-      clockTolerance: 60,
-    });
+    const { payload } = await jwtVerify(token, key, { clockTolerance: 60 });
     return payload as unknown as SessionUser;
   } catch {
     return null;
@@ -34,20 +32,26 @@ export async function decrypt(token: string) {
 }
 
 export async function createSession(userId: string) {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true, email: true, name: true, role: true },
-  });
+  const result = await db.queryOne<{
+    id: string;
+    email: string;
+    name: string | null;
+    role: string;
+  }>(
+    `SELECT id, email, name, role FROM users WHERE id = $1`,
+    [userId]
+  );
 
-  if (!user) return null;
+  if (!result) return null;
 
-  const session = await encrypt({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-  });
+  const user = {
+    id: result.id,
+    email: result.email,
+    name: result.name,
+    role: result.role as UserRole,
+  };
 
+  const session = await encrypt(user);
   const cookieStore = await cookies();
   cookieStore.set("session", session, {
     httpOnly: true,
