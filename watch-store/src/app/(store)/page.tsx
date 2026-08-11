@@ -6,34 +6,49 @@ import { Badge } from "@/components/ui/badge";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
 import { ArrowLeft, Star, Truck, Shield, Clock, ChevronLeft } from "lucide-react";
 
-async function getHomepageData() {
-  const [featuredProducts, newArrivals, bestSellers, brands, categories] = await Promise.all([
-    prisma.product.findMany({
-      where: { status: "ACTIVE", featured: true },
-      include: { brand: true, images: { take: 1 }, category: true },
-      take: 8,
-    }),
-    prisma.product.findMany({
-      where: { status: "ACTIVE", newArrival: true },
-      include: { brand: true, images: { take: 1 }, category: true },
-      take: 4,
-    }),
-    prisma.product.findMany({
-      where: { status: "ACTIVE", bestSeller: true },
-      include: { brand: true, images: { take: 1 }, category: true },
-      take: 4,
-    }),
-    prisma.brand.findMany({
-      where: { status: "ACTIVE" },
-      take: 6,
-    }),
-    prisma.category.findMany({
-      where: { status: "ACTIVE" },
-      take: 4,
-    }),
-  ]);
+// ← الحل الرئيسي: يمنع البناء المسبق (prerender) ويجعل الصفحة ديناميكية
+export const dynamic = "force-dynamic";
 
-  return { featuredProducts, newArrivals, bestSellers, brands, categories };
+async function getHomepageData() {
+  try {
+    const [featuredProducts, newArrivals, bestSellers, brands, categories] = await Promise.all([
+      prisma.product.findMany({
+        where: { status: "ACTIVE", featured: true },
+        include: { brand: true, images: { take: 1 }, category: true },
+        take: 8,
+      }),
+      prisma.product.findMany({
+        where: { status: "ACTIVE", newArrival: true },
+        include: { brand: true, images: { take: 1 }, category: true },
+        take: 4,
+      }),
+      prisma.product.findMany({
+        where: { status: "ACTIVE", bestSeller: true },
+        include: { brand: true, images: { take: 1 }, category: true },
+        take: 4,
+      }),
+      prisma.brand.findMany({
+        where: { status: "ACTIVE" },
+        take: 6,
+      }),
+      prisma.category.findMany({
+        where: { status: "ACTIVE" },
+        take: 4,
+      }),
+    ]);
+
+    return { featuredProducts, newArrivals, bestSellers, brands, categories };
+  } catch (error) {
+    console.error("Database error during homepage fetch:", error);
+    // ← لو قاعدة البيانات غير متوفرة أو الجداول ناقصة، نرجع مصفوفات فاضية
+    return {
+      featuredProducts: [],
+      newArrivals: [],
+      bestSellers: [],
+      brands: [],
+      categories: [],
+    };
+  }
 }
 
 export default async function HomePage() {
@@ -193,10 +208,13 @@ export default async function HomePage() {
 
 function ProductCard({ product }: { product: any }) {
   const mainImage = product.images[0]?.url || "/placeholder-watch.jpg";
-  const hasDiscount = product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price);
-  const discountPercent = hasDiscount
-    ? calculateDiscount(Number(product.compareAtPrice), Number(product.price))
-    : 0;
+  
+  // ← تحويل Decimal لـ Number
+  const price = Number(product.price);
+  const compareAtPrice = product.compareAtPrice ? Number(product.compareAtPrice) : null;
+  
+  const hasDiscount = compareAtPrice && compareAtPrice > price;
+  const discountPercent = hasDiscount ? calculateDiscount(compareAtPrice, price) : 0;
 
   return (
     <Link href={`/product/${product.slug}`} className="group">
@@ -222,10 +240,10 @@ function ProductCard({ product }: { product: any }) {
           <p className="text-xs text-muted-foreground mb-1">{product.brand.name}</p>
           <h3 className="font-bold text-sm mb-2 line-clamp-1">{product.nameAr}</h3>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-gold-600">{formatPrice(product.price)}</span>
+            <span className="font-bold text-gold-600">{formatPrice(price)}</span>
             {hasDiscount && (
               <span className="text-sm text-muted-foreground line-through">
-                {formatPrice(product.compareAtPrice)}
+                {formatPrice(compareAtPrice)}
               </span>
             )}
           </div>
