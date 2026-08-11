@@ -509,8 +509,12 @@ async function main() {
         customerNotes: i === 0 ? "يرجى التواصل قبل التوصيل" : null,
         confirmedAt: status !== OrderStatus.PENDING ? new Date(Date.now() - 86400000 * 5) : null,
         processingAt: (status === OrderStatus.PROCESSING || status === OrderStatus.PACKED || status === OrderStatus.SHIPPED || status === OrderStatus.DELIVERED) ? new Date(Date.now() - 86400000 * 4) : null,
-        packedAt: [OrderStatus.PACKED, OrderStatus.SHIPPED, OrderStatus.DELIVERED].includes(status) ? new Date(Date.now() - 86400000 * 3) : null,
-        shippedAt: [OrderStatus.SHIPPED, OrderStatus.DELIVERED].includes(status) ? new Date(Date.now() - 86400000 * 2) : null,
+        packedAt: (status === OrderStatus.PACKED || status === OrderStatus.SHIPPED || status === OrderStatus.DELIVERED) 
+        ? new Date(Date.now() - 86400000 * 3) 
+        : null,
+        shippedAt: (status === OrderStatus.SHIPPED || status === OrderStatus.DELIVERED) 
+        ? new Date(Date.now() - 86400000 * 2) 
+        : null,
         deliveredAt: status === OrderStatus.DELIVERED ? new Date(Date.now() - 86400000) : null,
         items: {
           create: orderItems,
