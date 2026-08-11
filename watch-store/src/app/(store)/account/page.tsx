@@ -36,7 +36,7 @@ export default async function AccountPage() {
                 {orders.map((order) => (
                   <div key={order.id} className="flex justify-between items-center border-b pb-2">
                     <div><p className="font-medium">{order.orderNumber}</p><p className="text-xs text-muted-foreground">{order.status}</p></div>
-                    <span className="font-bold">{formatPrice(order.total)}</span>
+                    <span className="font-bold">{formatPrice(Number(order.total))}</span>
                   </div>
                 ))}
               </div>
