@@ -42,7 +42,7 @@ export default async function AdminOrdersPage() {
                   <TableCell className="font-medium"><Link href={`/admin/orders/${order.id}`} className="hover:underline">{order.orderNumber}</Link></TableCell>
                   <TableCell>{order.user.name || order.user.email}</TableCell>
                   <TableCell>{order.items.length} منتج</TableCell>
-                  <TableCell>{formatPrice(order.total)}</TableCell>
+                  <TableCell>{formatPrice(Number(order.total))}</TableCell>
                   <TableCell><Badge className={statusColors[order.status] || ""}>{statusLabels[order.status] || order.status}</Badge></TableCell>
                   <TableCell>{formatDate(order.createdAt)}</TableCell>
                 </TableRow>
