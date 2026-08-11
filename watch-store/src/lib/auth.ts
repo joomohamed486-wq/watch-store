@@ -81,10 +81,6 @@ export async function verifyPassword(password: string, hashed: string): Promise<
 }
 
 export function isAdmin(role: UserRole): boolean {
-  return [UserRole.SUPER_ADMIN, UserRole.ADMIN].includes(role);
-}
-
-export function isAdmin(role: UserRole): boolean {
   return role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN;
 }
 
