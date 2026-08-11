@@ -17,7 +17,13 @@ export default async function AdminReviewsPage() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow><TableHead>المنتج</TableHead><TableHead>العميل</TableHead><TableHead>التقييم</TableHead><TableHead>العنوان</TableHead><TableHead>الحالة</TableRow>
+             <TableRow>
+  <TableHead>المنتج</TableHead>
+  <TableHead>العميل</TableHead>
+  <TableHead>التقييم</TableHead>
+  <TableHead>العنوان</TableHead>
+  <TableHead>الحالة</TableHead>
+             </TableRow>
             </TableHeader>
             <TableBody>
               {reviews.map((review) => (
